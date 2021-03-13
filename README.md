@@ -1,3 +1,3 @@
 ## Not really a blog
 
-Just playing around with nextjs & typescript.
+Just playing around with nextjs, typescript & tailwind.
