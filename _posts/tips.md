@@ -10,9 +10,11 @@ author:
   # url: '/assets/blog/dynamic-routing/cover.jpg'
 ---
 
-## Contents
+# Contents
 
 ## Git
+
+### log
 
 Get some overview of changes
 ```bash
@@ -26,7 +28,23 @@ $ git log --follow [file]
 $ git show [commit]
 
 ```
----
+
+### diff
+
+`git diff` — displays the not staged changes in your working tree
+`git diff <branch>` — display changes between the working tree and <branch>. 
+`git diff --staged` — display the staged changes
+`git diff master..dev` — display changes between branches master and dev.
+If you only want to inspect the file names use the `--name-only` switch. If you need to know which files were modified, added, or deleted — use the `--name-status` switch.
+
+Show the diff stat of everything you haven't pushed yet.
+```bash
+branch=$(git rev-parse --abbrev-ref HEAD) # branch you're on
+git diff --stat origin/$branch..HEAD
+```
+
+### misc
+
 You could use `git add -p` instead, which will give you chance to review all of the introduced changes one by one, and decide whether to include them in the commit or not.
 
 ---
@@ -37,24 +55,17 @@ $ git rebase -i upstream/master
 $ git checkout <branchname>
 $ git rebase -i --autosquash develop
 ```
-----
-To get a commit count for a revision (HEAD, master, a commit hash):
-`$ git rev-list --count <revision>`
+
+---
+To get a commit count for a revision (HEAD, master, a commit hash):  
+`$ git rev-list --count <revision>`  
+`$ git rev-list --count HEAD origin/master...HEAD`
 
 To get the commit count across all branches:
 `$ git rev-list --all --count`
 
----
 This will generate commit count for each committer
 `$ git shortlog -s -n`
-
-### git diff
-
-`git diff` — displays the not staged changes in your working tree
-`git diff dev` — display changes between the working tree and the dev branch. 
-`git diff --staged` — display the staged changes
-`git diff master..dev` — display changes between branches master and dev.
-If you only want to inspect the file names use the `--name-only` switch. If you need to know which files were modified, added, or deleted — use the `--name-status` switch.
 
 ---
 To fetch a remote PR into your local repo,
@@ -76,23 +87,13 @@ Discards all history and changes back to the specified commit
 ---
 Delete branch locally and on the origin remote.
 
-`$ git branch -D <branch>`
-`$ git push origin :<branch>`
+`$ git branch -D <branch> && git push origin :<branch>`
 
----
-Show the diffstat of everything you haven't pushed yet.
-```bash
-branch=$(git rev-parse --abbrev-ref HEAD)
-count=$(git rev-list --count HEAD origin/$branch...HEAD)
-
-git diff --stat origin/$branch..HEAD
-echo " $count commits total"
-```
 
 ## Bash
 
-\* See also [The art of command line](https://github.com/jlevy/the-art-of-command-line)
-\* [My dotfiles](https://github.com/fraasi/dotfiles)
+* See also [The art of command line](https://github.com/jlevy/the-art-of-command-line)
+* [My dotfiles](https://github.com/fraasi/dotfiles)
 
 ---
 -In Bash scripts, subshells (written with parentheses) are convenient ways to group commands. A common example is to temporarily move to a different working directory, e.g.
@@ -102,7 +103,7 @@ echo " $count commits total"
 # continue in original dir
 ```
 ---
-## JS one-liners
+## Javascript
 
 ```js
 // It's the JS version of the sleep commands
@@ -112,14 +113,10 @@ await sleep(2000);
 // Mini jQuery.
 const $ = document.querySelector.bind(document);
 
-// Shuffle an array.
-const shuffle = n => n.sort(() => 0.5 - Math.random());
-
 //Initializes a 2D array of given width and height and value.
 const initialize2DArray = (w, h, val = null) =>
   Array.from({ length: h }).map(() => Array.from({ length: w }).fill(val));
 ```
----
 ```js
 let isRequired = () => {
  throw new Error('This is a mandatory parameter.');
