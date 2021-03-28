@@ -10,20 +10,12 @@ author:
   # url: '/assets/blog/dynamic-routing/cover.jpg'
 ---
 
-### Table of contents
-
-<!-- toc -->
-
-- [Git](#git)
-- [Bash](#bash)
-- [JS one-liners](#js-one-liners)
-
-<!-- tocstop -->
+## Contents
 
 ## Git
 
 Get some overview of changes
-```sh
+```bash
 $ git log --stat --summary
 $ git log -p
 
@@ -38,7 +30,7 @@ $ git show [commit]
 You could use `git add -p` instead, which will give you chance to review all of the introduced changes one by one, and decide whether to include them in the commit or not.
 
 ---
-```sh
+```bash
 $ git fetch upstream
 $ git rebase -i upstream/master
 
@@ -56,7 +48,8 @@ To get the commit count across all branches:
 This will generate commit count for each committer
 `$ git shortlog -s -n`
 
----
+### git diff
+
 `git diff` — displays the not staged changes in your working tree
 `git diff dev` — display changes between the working tree and the dev branch. 
 `git diff --staged` — display the staged changes
@@ -88,7 +81,7 @@ Delete branch locally and on the origin remote.
 
 ---
 Show the diffstat of everything you haven't pushed yet.
-```sh
+```bash
 branch=$(git rev-parse --abbrev-ref HEAD)
 count=$(git rev-list --count HEAD origin/$branch...HEAD)
 
@@ -103,7 +96,7 @@ echo " $count commits total"
 
 ---
 -In Bash scripts, subshells (written with parentheses) are convenient ways to group commands. A common example is to temporarily move to a different working directory, e.g.
-```sh
+```bash
 # do something in current dir
 (cd /some/other/dir && other-command)
 # continue in original dir
