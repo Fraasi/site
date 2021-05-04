@@ -27,21 +27,33 @@ $ git log --follow [file]
 # Outputs metadata and content changes of the specified commit
 $ git show [commit]
 
+# View a file of another branch in your terminal
+$ git show [origin/]main:README.md
 ```
 
 ### diff
 
-`git diff` — displays the not staged changes in your working tree
-`git diff <branch>` — display changes between the working tree and <branch>. 
-`git diff --staged` — display the staged changes
-`git diff master..dev` — display changes between branches master and dev.
-If you only want to inspect the file names use the `--name-only` switch. If you need to know which files were modified, added, or deleted — use the `--name-status` switch.
+`git diff` — displays the not staged changes in your working tree  
+`git diff <branch>` — display changes between the working tree and <branch>  
+`git diff --staged` — display the staged changes  
+`git diff master..dev` — display changes between branches master and dev  
+If you only want to inspect the file names use the `--name-only` switch  
+If you need to know which files were modified, added, or deleted — use the `--name-status` switch.
 
-Show the diff stat of everything you haven't pushed yet.
 ```bash
-branch=$(git rev-parse --abbrev-ref HEAD) # branch you're on
-git diff --stat origin/$branch..HEAD
+# Show the diff stat of everything you haven't pushed yet.
+$ branch=$(git rev-parse --abbrev-ref HEAD) # branch you're on
+$ git diff --stat origin/$branch..HEAD
 ```
+```bash
+# Show commits that are in your current branch, but not origin
+# i.e. whether you're ahead of origin and by which commits
+$ git rev-list origin..HEAD
+$ git rev-list HEAD..origin # will show the opposite
+# If both commands show commits, then you have diverged branches
+```
+
+* See also **[.. vs ...](https://stackoverflow.com/questions/7251477/what-are-the-differences-between-double-dot-and-triple-dot-in-git-dif)**
 
 ### misc
 
