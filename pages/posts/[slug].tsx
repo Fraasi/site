@@ -14,13 +14,13 @@ import PostType from '../../types/post'
 
 type Props = {
   post: PostType
-  morePosts: PostType[]
   preview?: boolean
 }
 
-const Post = ({ post, morePosts, preview }: Props) => {
+const Post = ({ post, preview }: Props) => {
   const router = useRouter()
-  if (!router.isFallback && !post?.slug) {
+
+  if (!router.isFallback && !post?.title) {
     return <ErrorPage statusCode={404} />
   }
   return (
@@ -40,7 +40,7 @@ const Post = ({ post, morePosts, preview }: Props) => {
               <PostHeader
                 title={post.title}
                 coverImage={post.coverImage}
-                date={post.date}
+                date={post.published_at}
                 author={post.author}
               />
               <PostBody content={post.content} />
@@ -61,15 +61,20 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
-  const post = getPostBySlug(params.slug, [
-    'title',
-    'date',
-    'slug',
-    'author',
-    'content',
-    'ogImage',
-    'coverImage',
-  ])
+  //   console.log('params:', params)
+  //   const post = getPostBySlug(params.slug, [
+  //     'title',
+  //     'date',
+  //     'slug',
+  //     'author',
+  //     'content',
+  //     'ogImage',
+  //     'coverImage',
+  //   ])
+
+  const data = await getAllPosts()
+
+  const post = data.posts.find(p => p.title == params.slug)
   const content = await markdownToHtml(post.content || '')
 
   return {
@@ -83,16 +88,19 @@ export async function getStaticProps({ params }: Params) {
 }
 
 export async function getStaticPaths() {
-  const posts = getAllPosts(['slug'])
+  const data = await getAllPosts()
+  if (!data) return { notFound: true }
 
   return {
-    paths: posts.map((posts) => {
+    paths: data.posts.map((post) => {
       return {
         params: {
-          slug: posts.slug,
+          slug: post.title,
         },
       }
     }),
-    fallback: false,
+    // We'll pre-render only these paths at build time.
+    // { fallback: false } means other routes should 404.
+    fallback: true,
   }
 }

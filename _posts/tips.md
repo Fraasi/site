@@ -31,15 +31,15 @@ $ git show [commit]
 
 ### diff
 
-`git diff` — displays the not staged changes in your working tree
-`git diff <branch>` — display changes between the working tree and <branch>. 
-`git diff --staged` — display the staged changes
-`git diff master..dev` — display changes between branches master and dev.
+`git diff` — displays the not staged changes in your working tree  
+`git diff dev` — display changes between the working tree and dev branch  
+`git diff --staged` — display the staged changes  
+`git diff master..dev` — display changes between branches master and dev  
 If you only want to inspect the file names use the `--name-only` switch. If you need to know which files were modified, added, or deleted — use the `--name-status` switch.
 
 Show the diff stat of everything you haven't pushed yet.
 ```bash
-branch=$(git rev-parse --abbrev-ref HEAD) # branch you're on
+branch=$(git rev-parse --abbrev-ref HEAD)
 git diff --stat origin/$branch..HEAD
 ```
 

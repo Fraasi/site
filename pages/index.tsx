@@ -30,14 +30,32 @@ const Index = ({ allPosts }: Props) => {
 export default Index
 
 export const getStaticProps = async () => {
-  const allPosts = getAllPosts([
-    'title',
-    'date',
-    'slug',
-    'author',
-  ])
+  if (process.env.NODE_ENV === 'development') {
+    const res = await fetch(`http://localhost:1337/posts`)
+    const allPosts = await res.json()
 
-  return {
-    props: { allPosts },
+    if (!allPosts) {
+      return {
+        notFound: true,
+      }
+    }
+
+    return {
+      props: { allPosts },
+    }
+  } else {
+    // const allPosts = getAllPosts([
+    //   'title',
+    //   'date',
+    //   'slug',
+    //   'author',
+    // ])
+
+    // return {
+    //   props: { allPosts },
+    // }
+    return {
+      notFound: true,
+    }
   }
 }

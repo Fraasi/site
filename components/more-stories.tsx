@@ -16,9 +16,9 @@ const MoreStories = ({ posts }: Props) => {
           <PostPreview
             key={post.slug}
             title={post.title}
-            date={post.date}
+            date={post.createdAt}
             author={post.author}
-            slug={post.slug}
+            slug={post.title.replace(' ', '-')}
           />
         ))}
       </div>
