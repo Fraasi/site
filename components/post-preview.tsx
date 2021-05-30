@@ -14,9 +14,6 @@ const PostPreview = ({
   date,
   slug,
 }: Props) => {
-  console.log('title:', title)
-  console.log('date:', date)
-  console.log('slug:', slug)
   return (
     <div>
       <div className="mb-5">
