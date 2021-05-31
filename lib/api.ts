@@ -1,6 +1,6 @@
-import fs from 'fs'
-import { join } from 'path'
-import matter from 'gray-matter'
+// import fs from 'fs'
+// import { join } from 'path'
+// import matter from 'gray-matter'
 
 /* old, for directory structure
 const postsDirectory = join(process.cwd(), '_posts')

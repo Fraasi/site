@@ -6,7 +6,7 @@
 .markdown ul,
 .markdown ol,
 .markdown blockquote {
-  @apply my-6;
+  @apply mt-4 mb-1;
 }
 
 .markdown h2 {
@@ -15,4 +15,14 @@
 
 .markdown h3 {
   @apply text-2xl mt-8 mb-4 leading-snug;
+}
+
+.markdown ul li p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown li ul {
+  margin-top: 0;
+  margin-left: 15px;
 }

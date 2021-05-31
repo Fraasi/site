@@ -14,7 +14,7 @@ const MoreStories = ({ posts }: Props) => {
       <div className="grid grid-cols-1">
         {posts.map((post) => (
           <PostPreview
-            key={post.slug}
+            key={post.title}
             title={post.title}
             date={post.createdAt}
             author={post.author}

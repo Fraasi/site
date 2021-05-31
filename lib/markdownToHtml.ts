@@ -7,19 +7,19 @@ import slug from 'remark-slug'
 
 export default async function markdownToHtml(markdown: string) {
   const result = await remark()
-    .use(html)
+    .use(slug) // toc needs this, adds anchors to headings
     .use(toc, {
-      heading: 'Contents',
+      heading: 'Table of Contents',
       tight: true,
       parents: ['root', 'contents']
     })
-    .use(slug) // toc needs this, adds anchors to headings
     .use(prism, {
       transformInlineCode: true,
       plugins: [
         'line-numbers',
       ],
     })
+    .use(html)
     .process(markdown)
   return result.toString()
 }
