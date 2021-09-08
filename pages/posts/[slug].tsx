@@ -5,7 +5,7 @@ import PostBody from '../../components/post-body'
 import Header from '../../components/header'
 import PostHeader from '../../components/post-header'
 import Layout from '../../components/layout'
-import { getPostBySlug, getAllPosts } from '../../lib/api'
+import { getAllPosts } from '../../lib/api'
 import PostTitle from '../../components/post-title'
 import Head from 'next/head'
 import { BLOG_NAME } from '../../lib/constants'
@@ -62,20 +62,11 @@ type Params = {
 
 export async function getStaticProps({ params }: Params) {
   //   console.log('params:', params)
-  //   const post = getPostBySlug(params.slug, [
-  //     'title',
-  //     'date',
-  //     'slug',
-  //     'author',
-  //     'content',
-  //     'ogImage',
-  //     'coverImage',
-  //   ])
 
   const data = await getAllPosts()
 
-  const post = data.posts.find(p => p.title == params.slug)
-  const content = await markdownToHtml(post.content || '')
+  const post: any = data.posts.find(p => p.title == params.slug)
+  const content: string = await markdownToHtml(post?.content || '')
 
   return {
     props: {
