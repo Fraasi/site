@@ -49,6 +49,8 @@ export function getAllPosts(fields: string[] = []) {
 */
 
 // for strapi
+import PostType from '../types/post'
+
 async function fetchAPI(query: string, variables: object = {}) {
 
   const URI = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
@@ -72,25 +74,25 @@ async function fetchAPI(query: string, variables: object = {}) {
   return json.data
 }
 
-type Post = {
-  title: string
-  content: string
-  id: number
-  published_at: string
-}
 type Data = {
-  posts: Post[]
+  posts: PostType[]
 }
 export async function getAllPosts() {
-  const data: Promise<Data> = fetchAPI(`
+  const data: Data = await fetchAPI(`
     {
       posts {
+        id
+        createdAt
+        updatedAt
+        published_at
         title
         content
-        id
-        published_at
       }
     }
   `)
+  // sort posts by date in descending order
+  data.posts.sort((post1: PostType, post2: PostType) => (
+    post1.updatedAt > post2.updatedAt ? -1 : 1
+  ))
   return data
 }

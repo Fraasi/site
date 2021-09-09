@@ -15,9 +15,10 @@ import PostType from '../../types/post'
 type Props = {
   post: PostType
   preview?: boolean
+  coverImage?: string
 }
 
-const Post = ({ post, preview }: Props) => {
+const Post = ({ post, preview, coverImage }: Props) => {
   const router = useRouter()
 
   if (!router.isFallback && !post?.title) {
@@ -39,9 +40,8 @@ const Post = ({ post, preview }: Props) => {
               </Head>
               <PostHeader
                 title={post.title}
-                coverImage={post.coverImage}
-                date={post.published_at}
-                author={post.author}
+                coverImage={coverImage}
+                date={post.updatedAt}
               />
               <PostBody content={post.content} />
             </article>
@@ -78,6 +78,7 @@ export async function getStaticProps({ params }: Params) {
 
 export async function getStaticPaths() {
   const data = await getAllPosts()
+  console.log('data:', data)
   if (!data) return { notFound: true }
 
   return {

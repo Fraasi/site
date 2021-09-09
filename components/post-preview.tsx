@@ -1,11 +1,9 @@
 import DateFormatter from './date-formatter'
 import Link from 'next/link'
-import Author from '../types/author'
 
 type Props = {
   title: string
   date: string
-  author: Author
   slug: string
 }
 
