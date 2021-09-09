@@ -61,11 +61,9 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
-  //   console.log('params:', params)
 
   const data = await getAllPosts()
-
-  const post: any = data.posts.find(p => p.title == params.slug)
+  const post = data.posts.find(p => p.title == params.slug)
   const content: string = await markdownToHtml(post?.content || '')
 
   return {

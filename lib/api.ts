@@ -49,8 +49,8 @@ export function getAllPosts(fields: string[] = []) {
 */
 
 // for strapi
-async function fetchAPI(query: String, variables: Object = {}) {
-  console.log('variables:', variables)
+async function fetchAPI(query: string, variables: object = {}) {
+
   const URI = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
   const res = await fetch(`${URI}/graphql`, {
     method: 'POST',
@@ -73,10 +73,10 @@ async function fetchAPI(query: String, variables: Object = {}) {
 }
 
 type Post = {
-  title: String
-  content: String
-  id: Number
-  published_at: String
+  title: string
+  content: string
+  id: number
+  published_at: string
 }
 type Data = {
   posts: Post[]
