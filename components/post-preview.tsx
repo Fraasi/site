@@ -16,14 +16,14 @@ const PostPreview = ({
 }: Props) => {
   return (
     <div>
-      <div className="mb-5">
+      <div className="mb-2">
       </div>
       <h3 className="text-lg font-bold leading-snug">
         <Link as={`/posts/${slug}`} href="/posts/[slug]">
           <a className="hover:underline">{title}</a>
         </Link>
       </h3>
-      <div className="mb-4 text-gray-700">
+      <div className="mb-1 text-gray-700">
         <DateFormatter dateString={date} />
       </div>
     </div>

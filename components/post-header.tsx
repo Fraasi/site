@@ -10,21 +10,19 @@ type Props = {
   author: Author
 }
 
-const PostHeader = ({ title, coverImage, date, author }: Props) => {
+const PostHeader = ({ title, coverImage, date }: Props) => {
   return (
     <>
       <PostTitle>{title}</PostTitle>
-      <div className="hidden md:block md:mb-12">
+      <div className="mb-6 ml-2 text-base">
+        <DateFormatter dateString={date} />
       </div>
+      <div className="hidden md:block md:mb-2"></div>
       <div className="mb-8 md:mb-16 sm:mx-0">
-        {coverImage ? (<CoverImage title={title} src={coverImage} />) : null}
-
+        {coverImage && (<CoverImage title={title} src={coverImage} />)}
       </div>
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto mb-6">
         <div className="block md:hidden mb-6">
-        </div>
-        <div className="mb-6 text-lg">
-          <DateFormatter dateString={date} />
         </div>
       </div>
     </>
