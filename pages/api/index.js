@@ -1,42 +1,38 @@
-// export default async function handler(req, res) {
-//   res.status(200).json({ name: 'John Doe' })
-// }
-// import { makeExecutableSchema } from "@graphql-tools/schema";
-import { graphql, GraphQLError }  from "graphql";
-// import pkg  from 'graphql.js';
-// const { graphql, GraphQLError } = pkg
+import { graphql, buildSchema, GraphQLError, printSchema, printIntrospectionSchema }  from "graphql";
 
-// import pkg from 'graphql';
-// const { parse, GraphQLError, isNonNullType, valueFromAST, print, isObjectType, isListType, isSpecifiedDirective, astFromValue, isSpecifiedScalarType, isIntrospectionType, isInterfaceType, isUnionType, isInputObjectType, isEnumType, isScalarType, GraphQLDeprecatedDirective, specifiedRules, concatAST, validate, versionInfo, buildClientSchema, visit, TokenKind, Source, isTypeSystemDefinitionNode, getNamedType, GraphQLString, GraphQLNonNull, GraphQLList, GraphQLID, GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLObjectType, GraphQLInterfaceType, GraphQLInputObjectType, GraphQLDirective, GraphQLUnionType, GraphQLEnumType, GraphQLScalarType, isNamedType, getNullableType, isLeafType, GraphQLSchema, isDirective, isCompositeType, doTypesOverlap, getOperationAST, getDirectiveValues, GraphQLSkipDirective, GraphQLIncludeDirective, typeFromAST, isAbstractType, getOperationRootType, TypeNameMetaFieldDef, buildASTSchema } = pkg;
 
 const typeDefs = `
   type Query {
     users: [User]
+    hello: String
   }
-
   type User {
     username: String!
     avatar: String!
   }
 `;
 
+const schema = buildSchema(typeDefs)
+console.log('schema:', printIntrospectionSchema(schema))
+
 const resolvers = {
   Query: {
-    users: () => [
+    users: () => { return [
       {
         username: "notrab",
       },
       {
         username: "rauchg",
       },
-    ],
+    ]},
+    User: {
+      avatar: (root) => `https://github.com/${'root.username'}.png`,
+    },
   },
-  User: {
-    avatar: (root) => `https://github.com/${root.username}.png`,
-  },
+  hello: (r) => {console.log(r); return 'helloooo'}
 };
 
-const schema = makeExecutableSchema({ typeDefs, resolvers });
+// const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 export default async function handler(req, res) {
   const { method, body, query: qs } = req;
@@ -48,24 +44,29 @@ export default async function handler(req, res) {
       .send("Method not allowed");
   }
 
-  if (!qs.query && method === "GET")
-    return res.status(400).json({
-      statusCode: 400,
-      error: "Bad Request",
-      message: "GET query missing",
-    });
+  // if (!qs.query && method === "GET")
+  //   return res.status(400).json({
+  //     statusCode: 400,
+  //     error: "Bad Request",
+  //     message: "GET query missing",
+  //   });
 
   const { query, variables, operationName } = method === "GET" ? qs : body;
 
   try {
-    const result = await graphql(
-      schema,
-      query,
-      null,
-      null,
-      variables,
-      operationName
+    const result = await graphql({
+      schema: schema,
+      source: `{ users{ username } hello}
+     `,
+      rootValue: resolvers,
+      contextValue: null,
+      variableValues: {'variable': 'value'},
+      operationName: null,
+      fieldResolver: null,
+      typeResolver: null,
+    }
     );
+
 
     res.status(200).json(result);
   } catch (err) {
