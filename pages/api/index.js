@@ -1,38 +1,53 @@
-import { graphql, buildSchema, GraphQLError, printSchema, printIntrospectionSchema }  from "graphql";
+// import { makeExecutableSchema } from "@graphql-tools/schema";
+import { graphql, buildSchema, GraphQLError, printSchema, printIntrospectionSchema } from "graphql";
 
 
 const typeDefs = `
   type Query {
     users: [User]
-    hello: String
   }
   type User {
-    username: String!
-    avatar: String!
+    username: String
+    avatar: String
+    id: String
   }
 `;
 
+// const schema = makeExecutableSchema({ typeDefs, resolvers });
 const schema = buildSchema(typeDefs)
-console.log('schema:', printIntrospectionSchema(schema))
 
 const resolvers = {
-  Query: {
-    users: () => { return [
+  users: (root, args, ctx, info) => {
+    console.log('root:', root)
+    console.log('args:', args)
+    console.log('ctx:', ctx)
+    console.log('info:', info)
+    return [
       {
-        username: "notrab",
+        username: 'fraasi',
+        avatar: 'aasa'
       },
       {
         username: "rauchg",
+        avatar: ''
       },
-    ]},
-    User: {
-      avatar: (root) => `https://github.com/${'root.username'}.png`,
-    },
+    ]
   },
-  hello: (r) => {console.log(r); return 'helloooo'}
+  User: {
+    id: root => root.username.length,
+    avatar: (root, args) => {
+      console.log('a-root:', root)
+      console.log('a-args:', args)
+
+      return `https://github.com/${root.username}.png`
+    },
+    username: () => {
+      return "notrab"
+    }
+  },
 };
 
-// const schema = makeExecutableSchema({ typeDefs, resolvers });
+
 
 export default async function handler(req, res) {
   const { method, body, query: qs } = req;
@@ -56,14 +71,16 @@ export default async function handler(req, res) {
   try {
     const result = await graphql({
       schema: schema,
-      source: `{ users{ username } hello}
-     `,
+      source: `{  users {
+        username
+        avatar
+      } }`,
       rootValue: resolvers,
-      contextValue: null,
-      variableValues: {'variable': 'value'},
-      operationName: null,
-      fieldResolver: null,
-      typeResolver: null,
+      // contextValue: resolvers,
+      // variableValues: { 'variable': 'value' },
+      // operationName: null,
+      // fieldResolver: null,
+      // typeResolver: null,
     }
     );
 
