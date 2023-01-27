@@ -5,12 +5,12 @@ import PostBody from '../../components/post-body'
 import Header from '../../components/header'
 import PostHeader from '../../components/post-header'
 import Layout from '../../components/layout'
-import { getAllPosts } from '../../lib/api'
+import { getAllPosts } from '../../src/pages/posts/lib/api'
 import PostTitle from '../../components/post-title'
 import Head from 'next/head'
-import { BLOG_NAME } from '../../lib/constants'
-import markdownToHtml from '../../lib/markdownToHtml'
-import PostType from '../../types/post'
+import { BLOG_NAME } from '../../src/pages/posts/lib/constants'
+import markdownToHtml from '../../src/pages/posts/lib/markdownToHtml'
+import PostType from '../../src/pages/posts/types/post'
 
 type Props = {
   post: PostType

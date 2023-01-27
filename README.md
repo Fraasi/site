@@ -1,3 +1,2 @@
-## Not really a blog
+## Not really a site ...yet
 
-Just playing around with nextjs, typescript & tailwind.

@@ -49,11 +49,61 @@ export function getAllPosts(fields: string[] = []) {
 */
 
 // for strapi
+// import PostType from '../types/post'
+
+// async function fetchAPI(query: string, variables: object = {}) {
+
+//   const URI = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
+//   const res = await fetch(`${URI}/graphql`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       query,
+//       variables,
+//     }),
+//   })
+
+//   const json = await res.json()
+//   if (json.errors) {
+//     console.error(json.errors)
+//     throw new Error('Failed to fetch API')
+//   }
+
+//   return json.data
+// }
+
+// type Data = {
+//   posts: PostType[]
+// }
+// export async function getAllPosts() {
+//   const data: Data = await fetchAPI(`
+//     {
+//       posts {
+//         id
+//         createdAt
+//         updatedAt
+//         published_at
+//         title
+//         content
+//       }
+//     }
+//   `)
+//   // sort posts by date in descending order
+//   data.posts.sort((post1: PostType, post2: PostType) => (
+//     post1.updatedAt > post2.updatedAt ? -1 : 1
+//   ))
+//   return data
+// }
+
+// for sanity
 import PostType from '../types/post'
 
 async function fetchAPI(query: string, variables: object = {}) {
 
-  const URI = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
+  const URI = process.env.NEXT_PUBLIC_SANITY_URI || 'http://localhost:1337'
+  console.log('URI', URI)
   const res = await fetch(`${URI}/graphql`, {
     method: 'POST',
     headers: {

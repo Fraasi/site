@@ -2,10 +2,10 @@ import Container from '../components/container'
 import MoreStories from '../components/more-stories'
 import Intro from '../components/intro'
 import Layout from '../components/layout'
-import { getAllPosts } from '../lib/api'
+import { getAllPosts } from '../src/pages/posts/lib/api'
 import Head from 'next/head'
-import { BLOG_NAME } from '../lib/constants'
-import Post from '../types/post'
+import { BLOG_NAME } from '../src/pages/posts/lib/constants'
+import Post from '../src/pages/posts/types/post'
 
 type Props = {
   allPosts: Post[]
