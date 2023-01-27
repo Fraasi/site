@@ -5,10 +5,9 @@ import PostBody from './components/post-body'
 import Header from './components/header'
 import PostHeader from './components/post-header'
 import Layout from './components/layout'
-import { getAllPosts } from './lib/api'
+import sanityApi from './lib/api'
 import PostTitle from './components/post-title'
 import Head from 'next/head'
-import { BLOG_NAME } from './lib/constants'
 import markdownToHtml from './lib/markdownToHtml'
 import PostType from './types/post'
 
@@ -19,6 +18,8 @@ type Props = {
 }
 
 const Post = ({ post, preview, coverImage }: Props) => {
+  console.log('post:', post)
+
   const router = useRouter()
 
   if (!router.isFallback && !post?.title) {
@@ -35,13 +36,13 @@ const Post = ({ post, preview, coverImage }: Props) => {
             <article className="mb-32">
               <Head>
                 <title>
-                  {post.title} | {BLOG_NAME}
+                  {post.title}
                 </title>
               </Head>
               <PostHeader
                 title={post.title}
                 coverImage={coverImage}
-                date={post.updatedAt}
+                date={post._updatedAt}
               />
               <PostBody content={post.content} />
             </article>
@@ -62,52 +63,52 @@ type Params = {
 
 export async function getStaticProps({ params }: Params) {
 
-  // const data = await getAllPosts()
-  // const post = data.posts.find(p => p.title == params.slug)
-  const post = {
-    id: 2,
-    createdAt: '2023-01-27T18:03:14.997Z',
-    updatedAt: '2023-01-27T18:03:14.997Z',
-    published_at: '2023-01-27T18:03:14.997Z',
-    title: 'test',
-    content: 'test content',
-    ogImage: {
-      url: 'http://image.url'
-    }
-  }
-  // const content: string = await markdownToHtml(post?.content || '')
 
+  // const content: string = await markdownToHtml(post?.content || '')
+  const posts = await sanityApi(`*[_type == "post"]`)
+  const post = posts.find((p: any) => p.slug.current === params.slug)
+  console.log(posts)
   return {
     props: {
-      post: {
-        ...post,
-        content: post.content,
-      },
+      post: toPlainText(post.content)
     },
   }
 }
 
 export async function getStaticPaths() {
-  // const data = await getAllPosts()
-  // console.log('data:', data)
-  // if (!data) return { notFound: true }
+  const posts = await sanityApi(`*[_type == "post"]`)
+  // if (!posts) return { notFound: true }
 
   return {
-    paths: [{
-      params: {
-        slug: 'test',
-      },
-    }],
-  // return {
-  //   paths: data.posts.map((post) => {
-  //     return {
-  //       params: {
-  //         slug: post.title,
-  //       },
-  //     }
-  //   }),
-  // We'll pre-render only these paths at build time.
-  // { fallback: false } means other routes should 404.
-  fallback: true,
+    paths: posts.map((post: any) => {
+      console.log('post.slug.current:', post.slug.current)
+
+      return {
+        params: {
+          slug: post.slug.current,
+        }
+      }
+    }),
+
+    // We'll pre-render only these paths at build time.
+    // { fallback: false } means other routes should 404.
+    fallback: false,
   }
+}
+
+function toPlainText(blocks = []) {
+  return blocks
+    // loop through each block
+    .map(block => {
+      // if it's not a text block with children,
+      // return nothing
+      if (block._type !== 'block' || !block.children) {
+        return ''
+      }
+      // loop through the children spans, and join the
+      // text strings
+      return block.children.map(child => child.text).join('')
+    })
+    // join the paragraphs leaving split by two linebreaks
+    .join('\n\n')
 }

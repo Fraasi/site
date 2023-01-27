@@ -1,9 +1,8 @@
 
 type PostType = {
-  id: number
-  createdAt: string
-  updatedAt: string
-  published_at: string
+  _id: number
+  _createdAt: string
+  _updatedAt: string
   title: string
   content: string
   ogImage: {
