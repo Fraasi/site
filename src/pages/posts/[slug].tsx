@@ -1,24 +1,23 @@
 import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
-import Container from './components/container'
 import PostBody from './components/post-body'
-import Header from './components/header'
 import PostHeader from './components/post-header'
-import Layout from './components/layout'
 import sanityApi from './lib/api'
 import PostTitle from './components/post-title'
 import Head from 'next/head'
 import markdownToHtml from './lib/markdownToHtml'
-import PostType from './types/post'
 
 type Props = {
-  post: PostType
-  preview?: boolean
-  coverImage?: string
+  content: string
+  title: string
+  createdAt: string
+  updatedAt: string
+  image?: string
+  slug: string
 }
 
-const Post = ({ post, preview, coverImage }: Props) => {
-  console.log('post:', post)
+const Post = (post: Props) => {
+  console.log('post in func:', post)
 
   const router = useRouter()
 
@@ -26,30 +25,26 @@ const Post = ({ post, preview, coverImage }: Props) => {
     return <ErrorPage statusCode={404} />
   }
   return (
-    <Layout preview={preview}>
-      <Container>
-        <Header />
-        {router.isFallback ? (
-          <PostTitle>Loading…</PostTitle>
-        ) : (
-          <>
-            <article className="mb-32">
-              <Head>
-                <title>
-                  {post.title}
-                </title>
-              </Head>
-              <PostHeader
-                title={post.title}
-                coverImage={coverImage}
-                date={post._updatedAt}
-              />
-              <PostBody content={post.content} />
-            </article>
-          </>
-        )}
-      </Container>
-    </Layout>
+    <>
+      {router.isFallback ? (
+        <PostTitle>Loading…</PostTitle>
+      ) : (
+        <>
+          <article className="mb-32">
+            <Head>
+              <title>
+                {post.title}
+              </title>
+            </Head>
+            <PostHeader
+              title={post.title}
+              date={new Date().toDateString()}
+            />
+            <PostBody content={post.content} />
+          </article>
+        </>
+      )}
+    </>
   )
 }
 
@@ -67,17 +62,23 @@ export async function getStaticProps({ params }: Params) {
   // const content: string = await markdownToHtml(post?.content || '')
   const posts = await sanityApi(`*[_type == "post"]`)
   const post = posts.find((p: any) => p.slug.current === params.slug)
+  console.log('post:', post)
   console.log(posts)
   return {
     props: {
-      post: toPlainText(post.content)
+      content: toPlainText(post.content),
+      title: post.title || 'not found',
+      createdAt: post._createdAt,
+      updatedAt: post._updatedAt,
+      image: post.image?.asset._ref || null,
+      slug: post.slug.current
     },
   }
 }
 
 export async function getStaticPaths() {
   const posts = await sanityApi(`*[_type == "post"]`)
-  // if (!posts) return { notFound: true }
+  if (!posts) return { notFound: true }
 
   return {
     paths: posts.map((post: any) => {
@@ -96,10 +97,16 @@ export async function getStaticPaths() {
   }
 }
 
-function toPlainText(blocks = []) {
+type Block = {
+  _type: string
+  children: Array<{ text: string }>
+
+}
+
+function toPlainText<Array>(blocks = []) {
   return blocks
     // loop through each block
-    .map(block => {
+    .map((block: Block) => {
       // if it's not a text block with children,
       // return nothing
       if (block._type !== 'block' || !block.children) {
